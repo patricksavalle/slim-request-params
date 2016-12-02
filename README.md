@@ -1,0 +1,1 @@
+# PHP SLIM Request parameter validation

@@ -1,0 +1,7 @@
+{
+  "name": "patricksavalle/SlimRequestParams",
+  "description": "Adds request-parameter validation to the SLIM 3.x PHP framework",
+  "require": {
+    "slim/slim": "^3.0"
+  }
+}
