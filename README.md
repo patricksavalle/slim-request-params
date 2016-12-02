@@ -1,23 +1,36 @@
 ## PHP SLIM Request parameter validation
 
+_Needs PHP 7.x_
+
 Validates request query and body parameters ($_GET and $_BODY) using regular expressions. 
 Adds a layer of security and self-documentation to your API-code. Example:
 
     use SlimRequestParams\QueryParameters;
 
-    $slimapp->get(...)
+    $slimapp->get('', ...)
         ->add(new QueryParameters([
-            '{text:[\w-.~@]+}',
+            '{text:\w+}',
             '{fromdate:\date}',
             '{distance:\float},0.0',
             '{orderby:(name|date)},name',
             '{reversed:\bool},false',
             '{offset:\int},1',
             '{count:\int},100',
-            '{*}',
         ]);
 
-Uses PHP 7 syntax.
+This would for example accept this request:
+
+    GET yourdomain.com?text=airplane&fromdate=2016-10-10
+
+And it would for example reject these requests:
+
+    GET yourdomain.com?text=airplane&fromdate=2016-10-10&whatever=23
+    GET yourdomain.com?text=airplane&fromdate=date
+    GET yourdomain.com?fromdate=2016-10-10&whatever=23
+    GET yourdomain.com?text=airplane&
+    GET yourdomain.com
+    
+etc.
 
 ### 0. Install with [Composer](https://packagist.org/packages/patricksavalle/slim-request-params) ###
 
@@ -48,8 +61,6 @@ To validate request parameters:
 
     $slimapp->get(...)
         ->add(new QueryParameters([
-            '{text:[\w-.~@]+}',
-            '{mimetype:[\w-.\/]+}',
             '{author:[\w-. @]+}',
             '{orderby:\w+},id',
             '{reversed:1},1',
@@ -106,7 +117,7 @@ For typed parameters and special formats there are the following keywords that c
     \currency
     \language
 
-### 2. Install the strategy for access to validated arguments
+### 2. Install the strategy for access to the validated arguments
 
 Add the strategy that combines the url-, query- and post-parameters into one object.
 
@@ -114,7 +125,7 @@ Add the strategy that combines the url-, query- and post-parameters into one obj
         return new RequestResponseArgsObject;
     };        
 
-### 3. Adapt your method handlers
+### 3. Adapt your route handlers to the new strategy
 
 A complete example.
 
@@ -142,10 +153,6 @@ A complete example.
         ->add(new QueryParameters(['{text:[\w-.~@]+},Hello'])
 
     $app->run();
-
-This example-API has one method that accepts a single argument:
-
-    /hello/patrick?text=who+am+I
 
 To retrieve or inspect the parameters from anywhere in your app just use:
     
