@@ -1,11 +1,23 @@
 ## PHP SLIM Request parameter validation
 
-Validates request query ($_GET) and body ($_BODY) parameters using regular expressions. 
-Adds a layer of security and self-documentation to your API-code. 
+Validates request query and body parameters ($_GET and $_BODY) using regular expressions. 
+Adds a layer of security and self-documentation to your API-code. Example:
+
+    use SlimRequestParams\QueryParameters;
+
+    $slimapp->get(...)
+        ->add(new QueryParameters([
+            '{text:[\w-.~@]+}',
+            '{fromdate:\date}',
+            '{distance:\float},0.0',
+            '{orderby:(name|date)},name',
+            '{reversed:\bool},false',
+            '{offset:\int},1',
+            '{count:\int},100',
+            '{*}',
+        ]);
 
 Uses PHP 7 syntax.
-
-Implement in 4 steps.
 
 ### 0. Install with [Composer](https://packagist.org/packages/patricksavalle/slim-request-params) ###
 
