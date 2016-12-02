@@ -7,10 +7,11 @@ Uses PHP 7 syntax.
 
 Implement in 4 steps.
 
-#### 0. Install with [Composer](https://packagist.org/packages/patricksavalle/slim-request-params) ####
+### 0. Install with [Composer](https://packagist.org/packages/patricksavalle/slim-request-params) ###
 
-- Update your `composer.json` to require `palanik/corsslim` package.
+- Update your `composer.json` to require `patricksavalle/slim-request-params`.
 - Run `composer install` to add slim-request-params your vendor folder.
+
     ```json
     {
       "require": {
@@ -18,22 +19,21 @@ Implement in 4 steps.
       }
     }
     ```
+
 - Include in your source.
+
     ```php
     <?php
    
     require './vendor/autoload.php';
     ```
 
-#### 1. Add the middleware to the SLIM routes 
+### 1. Add the middleware to the SLIM routes 
 
 To validate request parameters:
 
-    require 'vendor/autoload.php';
-
     use SlimRequestParams\QueryParameters;
 
-    $slimapp = new \Slim\Slim();
     $slimapp->get(...)
         ->add(new QueryParameters([
             '{text:[\w-.~@]+}',
@@ -47,6 +47,8 @@ To validate request parameters:
         ])
 
 To validate body parameters:
+
+    use SlimRequestParams\BodyParameters;
 
     $slimapp->post(...)
         ->add(new BodyParameters([
@@ -92,7 +94,7 @@ For typed parameters and special formats there are the following keywords that c
     \currency
     \language
 
-#### 2. Install the strategy for access to validated arguments
+### 2. Install the strategy for access to validated arguments
 
 Add the strategy that combines the url-, query- and post-parameters into one object.
 
@@ -100,7 +102,7 @@ Add the strategy that combines the url-, query- and post-parameters into one obj
         return new RequestResponseArgsObject;
     };        
 
-#### 3. Adapt your method handlers
+### 3. Adapt your method handlers
 
 A complete example.
 
@@ -129,7 +131,7 @@ A complete example.
 
     $app->run();
 
-This API has one method that accepts a single argument:
+This example-API has one method that accepts a single argument:
 
     /hello/patrick?text=who+am+I
 
