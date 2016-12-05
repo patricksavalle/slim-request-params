@@ -130,28 +130,35 @@ Add the strategy that combines the url-, query- and post-parameters into one obj
 A complete example.
 
     <?php
-    require 'vendor/autoload.php';
+    
+    declare(strict_types = 1);
+    
+    namespace YourApi;
+    
+    define("BASE_PATH", dirname(__FILE__));
+    
+    require BASE_PATH . '/vendor/autoload.php';
     
     use \Psr\Http\Message\ServerRequestInterface as Request;
     use \Psr\Http\Message\ResponseInterface as Response;
     use \SlimRequestParams\BodyParameters;
     use \SlimRequestParams\QueryParameters;
     use \SlimRequestParams\RequestResponseArgsObject;
-       
+    
     $app = new \Slim\App;
     
     $app->getContainer()['foundHandler'] = function () {
         return new RequestResponseArgsObject;
-    };        
-
+    };
+    
     $app->get('/hello/{name}', function (Request $request, Response $response, \stdClass $args) {
         $name = $args->name;
         $text = $args->text;
         $response->getBody()->write("$text, $name");
         return $response;
-    })        
-        ->add(new QueryParameters(['{text:[\w-.~@]+},Hello'])
-
+    })
+        ->add(new QueryParameters(['{text:[\w-.~@]+},Hello']));
+    
     $app->run();
 
 To retrieve or inspect the parameters from anywhere in your app just use:
