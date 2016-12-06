@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7fe82dd5b30cab038f54b66baccb9c9a",
-    "content-hash": "3b0766dbcef4dfb1a4a2012fef8611d8",
+    "content-hash": "4640b03d6b9207ca5bedf718147b0cfb",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -32,7 +31,7 @@
                 "MIT"
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-            "time": "2014-12-30 15:22:37"
+            "time": "2014-12-30T15:22:37+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -75,7 +74,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2016-06-12 19:08:51"
+            "time": "2016-06-12T19:08:51+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -121,7 +120,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11 15:10:35"
+            "time": "2015-09-11T15:10:35+00:00"
         },
         {
             "name": "psr/http-message",
@@ -171,7 +170,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "slim/slim",
@@ -241,7 +240,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-11-20 20:48:49"
+            "time": "2016-11-20T20:48:49+00:00"
         }
     ],
     "packages-dev": [],
