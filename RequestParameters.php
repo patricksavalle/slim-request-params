@@ -69,28 +69,7 @@ namespace SlimRequestParams {
 
                     } elseif (strcasecmp($matches['default'], '\optional') != 0) {
 
-                        // type corrections to the defaults
-                        switch ($matches['pattern']) {
-                            case '\boolean':
-                                $params[$matches['name']] = (bool)$matches['default'];
-                                break;
-
-                            case '\int':
-                                $params[$matches['name']] = (int)$matches['default'];
-                                break;
-
-                            case '\float':
-                                $params[$matches['name']] = (float)$matches['default'];
-                                break;
-
-                            case '\date':
-                                $params[$matches['name']] = (new \DateTime($matches['default']))->format('Y-m-d H:i:s');
-                                break;
-
-                            default:
-                                $params[$matches['name']] = $matches['default'];
-                                break;
-                        }
+                        $params[$matches['name']] = $matches['default'];
                     }
                 }
             }
@@ -129,10 +108,10 @@ namespace SlimRequestParams {
                         switch ($validations[$k]) {
 
                             case '\boolean':
-                                if (in_array($vv, ['true', 'TRUE', 1])) {
+                                if ($vv === 'true' or $vv === 'TRUE' or $vv === '1') {
                                     $validated = true;
                                     $params[$k][$kk] = true;
-                                } elseif (in_array($vv, ['false', 'FALSE', 0])) {
+                                } elseif ($vv === 'false' or $vv === 'FALSE' or $vv === '0') {
                                     $validated = true;
                                     $params[$k][$kk] = false;
                                 } else {
