@@ -45,6 +45,9 @@ namespace SlimRequestParams {
                 if (preg_match("/^{(?<name>\w+):(?<pattern>.*)}(?:,(?<default>.+))?$/", $rule, $matches) == 0) {
                     throw new \Exception("Invalid validation pattern: " . $rule);
                 }
+                if (empty($matches['name']) or empty($matches['pattern'])) {
+                    throw new \Exception("Invalid validation pattern: " . $rule);
+                }
                 $validations[$matches['name']] = $matches['pattern'];
 
                 // set the defaults
@@ -132,7 +135,7 @@ namespace SlimRequestParams {
                                 if ($vv === 'true' or $vv === 'TRUE' or $vv === '1') {
                                     $validated = true;
                                     $params[$k][$kk] = true;
-                                } elseif ($vv === 'false' or $vv === 'FALSE' or $vv == '0') {
+                                } elseif ($vv === 'false' or $vv === 'FALSE' or $vv === '0') {
                                     $validated = true;
                                     $params[$k][$kk] = false;
                                 } else {
