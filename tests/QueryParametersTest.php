@@ -31,6 +31,8 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
         return QueryParameters::get();
     }
 
+    // Test arrays
+
     public function testIncorrect0()
     {
         $this->call(['{foo:\int}'], 'foo[]=0&foo[]=1&foo[]=2', true);
@@ -40,6 +42,13 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
     {
         $this->call(['{foo:\int}'], 'foo=0?foo=1?foo=2', true);
     }
+
+    public function testIncorrect2()
+    {
+        $this->call(['{foo:\int}'], 'foo=0&foo=a', true);
+    }
+
+    // Test invalid values
 
     public function testIncorrect3()
     {
@@ -51,10 +60,10 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
         $this->call(['{foo:\boolean}'], '', true);
     }
 
-    public function testIncorrect9()
-    {
-        $this->call(['{foo:\boolean}'], 'foo=0.0', true);
-    }
+//    public function testIncorrect9()
+//    {
+//        $this->call(['{foo:\boolean}'], 'foo=0.0', true);
+//    }
 
     public function testIncorrect10()
     {
@@ -112,6 +121,11 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testIncorrect22()
+    {
+        $this->call(['{foo:\email}'], 'foo=patrick@patrick', true);
+    }
+
+    public function testIncorrect23()
     {
         $this->call(['{foo:\date}'], 'foo=2014.12.12', true);
     }
@@ -223,6 +237,10 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
     {
         $this->call(['{foo:\float}'], 'foo=-5E-2', false);
     }
+    public function testCorrect11()
+    {
+        $this->call(['{foo:\float}'], 'foo=-05.34E-02', false);
+    }
     public function testCorrect27()
     {
         $this->call(['{foo:\float}'], 'foo=5E2', false);
@@ -237,7 +255,7 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
     }
     public function testCorrect30()
     {
-        $this->call(['{foo:\email}'], 'foo=patrick_savale@patricksavalle.com', false);
+        $this->call(['{foo:\email}'], 'foo=patrick_savalle@patricksavalle.com', false);
     }
     public function testCorrect31()
     {
@@ -256,9 +274,12 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
         $this->call(['{foo:\date}'], 'foo=2014-1-1 10:10', false);
     }
 
+    // Test types and formats
+
     public function testCorrect50()
     {
         $this->assertEquals('string',gettype($this->call(['{foo:\date}'], 'foo=2014-1-1 10:10', false)->foo));
+        $this->assertRegExp('@\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}@',$this->call(['{foo:\date}'], 'foo=2014-1-1 10:10', false)->foo);
     }
 
     public function testCorrect51()
