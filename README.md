@@ -3,7 +3,10 @@
 _Needs PHP 7.x_
 
 Validates request query and body parameters ($_GET and $_BODY) using regular expressions. 
-Adds a layer of security and self-documentation to your API-code. Example:
+Adds a layer of security and self-documentation to your API-code. 
+Uses the same syntax as SLIM uses for route-segments. 
+
+Example:
 
     use SlimRequestParams\QueryParameters;
 
@@ -91,7 +94,7 @@ To forbid arguments to a route:
         
 General format of a validation rule:
 
-    {<name>:<regex>}[,<default_value>]
+    {<name>:<regex>},<optional_default_value>
 
 Missing parameters are set to the given default or null if no default is given. 
 Extra parameters generate an error unless the wildcard parameters is used: `{*}` in which 
@@ -116,6 +119,13 @@ For typed parameters and special formats there are the following keywords that c
     \timezone
     \currency
     \language
+    \bitcoinaddress
+    
+These are only syntax checks! Also there is an accept 'anything else' argument:
+
+    {*}
+    
+_(See code example above)_
 
 ### 2. Install the strategy for access to the validated arguments
 
