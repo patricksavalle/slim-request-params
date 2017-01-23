@@ -221,7 +221,7 @@ namespace SlimRequestParams {
 
                             default:
                                 if (!is_string($vv)) {
-                                    throw new \InvalidArgumentException("Invalid parameter type value for key (use \raw): $k");
+                                    throw new \InvalidArgumentException("Invalid parameter type value for key (use \\raw): $k");
                                 }
                                 $validated = 0 < (preg_match("/^{$validations[$k]}$/", $vv));
                         }
@@ -233,7 +233,8 @@ namespace SlimRequestParams {
 
                 // convert single element value back to scalar
                 if (1 == count($params[$k])) {
-                    $params[$k] = $params[$k][0];
+                    // get the first (only) element of the array
+                    $params[$k] = reset($params[$k]);
                 }
             }
             // must be supplied by sub-class
