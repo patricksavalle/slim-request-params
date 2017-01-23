@@ -171,6 +171,11 @@ namespace SlimRequestParams {
                                 $validated = false !== filter_var($vv, FILTER_VALIDATE_URL);
                                 break;
 
+                            case '\domain': {
+                                $parts = parse_url('http://' . $vv);
+                                $validated = is_array($parts) and (strcasecmp($parts['host'], $vv) == 0);
+                                break;
+                            }
                             case '\country':
                                 $params[$k][$kk] = strtoupper($vv);
                                 $validated = 0 < (preg_match("/^(?:[A-Za-z]{2})?$/", $vv));
@@ -209,7 +214,15 @@ namespace SlimRequestParams {
                                 }
                                 break;
 
+                            case '\bitcoinaddress':
+                                $params[$k][$kk] = strtoupper($vv);
+                                $validated = 0 < (preg_match("^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$", $vv));
+                                break;
+
                             default:
+                                if (!is_string($vv)) {
+                                    throw new \InvalidArgumentException("Invalid parameter type value for key (use \raw): $k");
+                                }
                                 $validated = 0 < (preg_match("/^{$validations[$k]}$/", $vv));
                         }
                         if (!$validated) {

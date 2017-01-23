@@ -22,7 +22,7 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
         $response = new \Slim\Http\Response();
 
         if ($expect_exception) {
-            $this->expectException(\Exception::class);
+            $this->expectException(\Throwable::class);
         }
         $queryparams = new \SlimRequestParams\QueryParameters($rules);
         $queryparams($request, $response, function ($request, $response) {
@@ -124,6 +124,14 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
     public function testIncorrect26()
     {
         $this->call(['{foo:\timezone}'], 'foo=+01', true);
+    }
+    public function testIncorrect27()
+    {
+        $this->call(['{foo:\domain}'], 'foo=mobbr.com/', true);
+    }
+    public function testIncorrect28()
+    {
+        $this->call(['{foo:\domain}'], 'foo=https://mobbr.com', true);
     }
 
     // ------------------------------------------------------------------------
@@ -280,9 +288,17 @@ class QueryParametersTest extends \PHPUnit_Framework_TestCase
     {
         $this->call(['{foo:\timezone}'], 'foo=zulu', false);
     }
+    public function testCorrect39()
+    {
+        $this->call(['{foo:\domain}'], 'foo=api.mobbr.com', false);
+    }
+    public function testCorrect40()
+    {
+        $this->call(['{foo:\domain}'], 'foo=mobbr.com', false);
+    }
 
     // Test combinations
-    public function testCorrect40()
+    public function testCorrect45()
     {
         $this->call([
             '{a:\timezone},Zulu',
