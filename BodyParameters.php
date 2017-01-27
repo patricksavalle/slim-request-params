@@ -19,7 +19,7 @@ namespace SlimRequestParams {
             callable $next)
         : ResponseInterface
         {
-            $this->validate($request->getParsedBody());
+            $this->validate($request->getParsedBody() ?? []);
             return $next($request, $response);
         }
     }
