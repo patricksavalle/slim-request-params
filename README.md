@@ -1,8 +1,8 @@
-## PHP SLIM Request parameter validation
+## PHP SLIM Request validation
 
 _Needs PHP 7.x_
 
-Validates request query and body parameters ($_GET and $_BODY) using regular expressions. 
+Validates request **query-parameters** and **body-parameters** ($_GET and $_BODY) and **HTTP-headers** using regular expressions. 
 Adds a layer of security and self-documentation to your API-code. 
 Uses the same syntax as SLIM uses for route-segments. 
 
@@ -87,6 +87,16 @@ To validate body parameters:
             '{*}',
         ]));
 
+To validate request headers (make sure they are present and their values follows a specific pattern):
+
+    use SlimRequestParams\RequestHeaders;
+
+    $slimapp->post(...)
+        ->add(new RequestHeaders([
+            '{HTTP_REFERER:\url}',
+            '{HTTP_CB_SIGNATURE:.*}',
+        ]));
+
 To forbid arguments to a route:
 
     $slimapp->get(...)
@@ -127,9 +137,11 @@ These are only syntax checks! Also there is an accept 'anything else' argument:
     
 _(See code example above)_
 
+The RequestHeaders Middleware always accept 'anything else'.
+
 ### 2. Install the strategy for access to the validated arguments
 
-Add the strategy that combines the url-, query- and post-parameters into one object.
+Add the strategy that combines the url-, query- and post-parameters and request-headers into one object.
 
     $slimapp->getContainer()['foundHandler'] = function () {
         return new RequestResponseArgsObject;
@@ -164,15 +176,17 @@ A complete example.
     $app->get('/hello/{name}', function (Request $request, Response $response, \stdClass $args) {
         $name = $args->name;
         $text = $args->text;
-        $response->getBody()->write("$text, $name");
+        $referer = $args->referer;
+        $response->getBody()->write("$text, $name, $referer");
         return $response;
     })
+        ->add(new RequestHeaders(['{HTTP_REFERER:\url']))
         ->add(new QueryParameters(['{text:[\w-.~@]+},Hello']));
     
     $app->run();
 
-To retrieve or inspect the parameters from anywhere in your app just use:
+To retrieve or inspect the validated parameters from anywhere in your app just use:
     
     \SlimRequestParams\QueryParameters::get();
     \SlimRequestParams\BodyParameters::get();
-
+    \SlimRequestParams\RequestHeaders::get();
