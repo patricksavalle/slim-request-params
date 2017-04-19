@@ -106,9 +106,10 @@ General format of a validation rule:
 
     {<name>:<regex>},<optional_default_value>
 
-Missing parameters are set to the given default or null if no default is given. 
-Extra parameters generate an error unless the wildcard parameters is used: `{*}` in which 
-case they are passed without validation.
+Missing parameters are set to the given default. 'null' or 'NULL' as default will be translated into a real null-value. 
+
+Extra parameters generate an error unless the wildcard parameter is used: `{*}` in which 
+case the extra parameters are passed without validation.
 
 Accepts the RFC-standard query parameter array, not the PHP version:
 
@@ -134,6 +135,10 @@ For typed parameters and special formats there are the following keywords that c
 These are only syntax checks! Also there is an accept 'anything else' argument:
 
     {*}
+
+Optional parameters should get the default:
+    
+    \optional
     
 _(See code example above)_
 
