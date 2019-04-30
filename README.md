@@ -43,7 +43,7 @@ etc.
     ```json
     {
       "require": {
-        "patricksavalle/slim-request-params": "dev-master"
+        "patricksavalle/slim-request-params": "^1.0"
       }
     }
     ```
