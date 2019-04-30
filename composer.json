@@ -4,7 +4,7 @@
   "version" : "v1.0",
   "type": "library",
   "keywords": ["validation","request","arguments","parameters","regex", "SLIM", "REST"],
-  "homepage": "https://github.com/patricksavalle/SlimRequestParams",
+  "homepage": "https://github.com/patricksavalle/slim-request-params",
   "license": "MIT",
   "authors": [
     {
