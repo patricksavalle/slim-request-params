@@ -1,6 +1,7 @@
 {
   "name": "patricksavalle/slim-request-params",
   "description": "Adds request-parameter validation to the SLIM 3.x PHP framework",
+  "version" : "v1.0",
   "type": "library",
   "keywords": ["validation","request","arguments","parameters","regex", "SLIM", "REST"],
   "homepage": "https://github.com/patricksavalle/SlimRequestParams",
