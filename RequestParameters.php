@@ -4,7 +4,13 @@ declare(strict_types = 1);
 
 namespace SlimRequestParams {
 
-    abstract class RequestParameters extends \stdClass
+    use DateTime;
+    use DateTimeZone;
+    use InvalidArgumentException;
+    use stdClass;
+    use Throwable;
+
+    abstract class RequestParameters extends stdClass
     {
         // Derived classes must implement:
         // static $validated_parameters;
@@ -17,7 +23,7 @@ namespace SlimRequestParams {
             $this->rules = $rules;
         }
 
-        static public function get(): \stdClass
+        static public function get(): stdClass
         {
             return (object)static::$validated_parameters;
         }
@@ -43,10 +49,10 @@ namespace SlimRequestParams {
 
                 // parse the rule
                 if (preg_match("/^{(?<name>\w+):(?<pattern>.*)}(?:,(?<default>.+))?$/", $rule, $matches) == 0) {
-                    throw new \Exception("Invalid validation pattern: " . $rule);
+                    throw new InvalidArgumentException("Invalid validation pattern: " . $rule, 500);
                 }
                 if (empty($matches['name']) or empty($matches['pattern'])) {
-                    throw new \Exception("Invalid validation pattern: " . $rule);
+                    throw new InvalidArgumentException("Invalid validation pattern: " . $rule, 500);
                 }
                 $validations[$matches['name']] = $matches['pattern'];
 
@@ -56,7 +62,7 @@ namespace SlimRequestParams {
                     if (!isset($matches['default'])) {
 
                         // parameter is missing and no default either
-                        throw new \InvalidArgumentException("Missing parameter: " . $matches['name']);
+                        throw new InvalidArgumentException("Missing parameter: " . $matches['name'], 400);
 
                     } elseif (strcasecmp($matches['default'], 'null') == 0) {
 
@@ -87,7 +93,8 @@ namespace SlimRequestParams {
                                 break;
 
                             case '\date':
-                                $params[$matches['name']] = (new \DateTime($matches['default']))->format('Y-m-d H:i:s');
+                                /** @noinspection PhpUnhandledExceptionInspection */
+                                $params[$matches['name']] = (new DateTime($matches['default']))->format('Y-m-d H:i:s');
                                 break;
 
                             default:
@@ -104,7 +111,7 @@ namespace SlimRequestParams {
                 // handle unvalidatable keys
                 if (!isset($validations[$k])) {
                     if (!$allow_any) {
-                        throw new \InvalidArgumentException("Invalid parameter: " . $k);
+                        throw new InvalidArgumentException("Invalid parameter: " . $k, 400);
                     } else {
                         $validations[$k] = '\raw';
                     }
@@ -171,17 +178,13 @@ namespace SlimRequestParams {
                                 $validated = false !== filter_var($vv, FILTER_VALIDATE_URL);
                                 break;
 
-                            case '\domain': {
-                                $parts = parse_url('http://' . $vv);
-                                $validated = is_array($parts) and (strcasecmp($parts['host'], $vv) == 0);
-                                break;
-                            }
-                            case '\country':
-                                $params[$k][$kk] = strtoupper($vv);
-                                $validated = 0 < (preg_match("/^(?:[A-Za-z]{2})?$/", $vv));
+                            case '\domain':
+                                $validated = false !== filter_var($vv, FILTER_VALIDATE_DOMAIN);
                                 break;
 
+                            case '\language':
                             case '\nationality':
+                            case '\country':
                                 $params[$k][$kk] = strtoupper($vv);
                                 $validated = 0 < (preg_match("/^(?:[A-Za-z]{2})?$/", $vv));
                                 break;
@@ -191,25 +194,20 @@ namespace SlimRequestParams {
                                 $validated = 0 < (preg_match("/^(?:[[:alnum:]]{3})?$/", $vv));
                                 break;
 
-                            case '\language':
-                                $params[$k][$kk] = strtoupper($vv);
-                                $validated = 0 < (preg_match("/^(?:[A-Za-z]{2})?$/", $vv));
-                                break;
-
                             case '\date':
                                 try {
-                                    $params[$k][$kk] = (new \DateTime($vv))->format('Y-m-d H:i:s');
+                                    $params[$k][$kk] = (new DateTime($vv))->format('Y-m-d H:i:s');
                                     $validated = true;
-                                } catch (\Throwable $t) {
+                                } catch (Throwable $t) {
                                     $validated = false;
                                 }
                                 break;
 
                             case '\timezone':
                                 try {
-                                    $params[$k][$kk] = (new \DateTimeZone($vv))->getName();
+                                    $params[$k][$kk] = (new DateTimeZone($vv))->getName();
                                     $validated = true;
-                                } catch (\Throwable $t) {
+                                } catch (Throwable $t) {
                                     $validated = false;
                                 }
                                 break;
@@ -221,12 +219,12 @@ namespace SlimRequestParams {
 
                             default:
                                 if (!is_string($vv)) {
-                                    throw new \InvalidArgumentException("Invalid parameter type value for key (use \\raw): $k");
+                                    throw new InvalidArgumentException("Invalid parameter type value for key (use \\raw): $k", 400);
                                 }
                                 $validated = 0 < (preg_match("/^{$validations[$k]}$/", $vv));
                         }
                         if (!$validated) {
-                            throw new \InvalidArgumentException("Invalid parameter value for key: $k ($vv)");
+                            throw new InvalidArgumentException("Invalid parameter value for key: $k ($vv)", 400);
                         }
                     }
                 }
