@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace SlimRequestParams {
 
@@ -9,6 +9,7 @@ namespace SlimRequestParams {
     use InvalidArgumentException;
     use stdClass;
     use Throwable;
+    use Exception;
 
     abstract class RequestParameters extends stdClass
     {
@@ -26,6 +27,15 @@ namespace SlimRequestParams {
         static public function get(): stdClass
         {
             return (object)static::$validated_parameters;
+        }
+
+        protected function xtext(string $text): string
+        {
+            $html = tidy_parse_string($text, ['output-xhtml' => 1, 'show-body-only' => 1]);
+            if (!tidy_clean_repair($html)) {
+                throw new Exception;
+            }
+            return strip_tags(tidy_get_output($html), '<strong><abbr><em><a><b><cite><i><strike><sub><sup><code><prev><del><blockquote>');
         }
 
         protected function validate(array $requestparams)
@@ -197,6 +207,15 @@ namespace SlimRequestParams {
                             case '\date':
                                 try {
                                     $params[$k][$kk] = (new DateTime($vv))->format('Y-m-d H:i:s');
+                                    $validated = true;
+                                } catch (Throwable $t) {
+                                    $validated = false;
+                                }
+                                break;
+
+                            case '\xtext':
+                                try {
+                                    $params[$k][$kk] = $this->xtext($vv);
                                     $validated = true;
                                 } catch (Throwable $t) {
                                     $validated = false;

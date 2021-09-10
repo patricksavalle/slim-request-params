@@ -131,6 +131,7 @@ For typed parameters and special formats there are the following keywords that c
     \currency
     \language
     \bitcoinaddress
+    \xtext   (a XHTML fragment only using text formatting tags, tidies up the text)
     
 These are only syntax checks! Also there is an accept 'anything else' argument:
 
