@@ -13,6 +13,11 @@ namespace SlimRequestParams {
 
     abstract class RequestParameters extends stdClass
     {
+        static $otherformats = [
+            "\bitcoinaddress" => "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$",
+            "\moneroaddress" => "^4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$",
+        ];
+
         // Derived classes must implement:
         // static $validated_parameters;
 
@@ -35,7 +40,7 @@ namespace SlimRequestParams {
             if (!tidy_clean_repair($html)) {
                 throw new Exception;
             }
-            return strip_tags(tidy_get_output($html), '<strong><abbr><em><a><b><cite><i><strike><sub><sup><code><prev><del><blockquote>');
+            return strip_tags(tidy_get_output($html), '<strong><abbr><em><a><b><cite><i><sub><sup><code><prev><del><blockquote>');
         }
 
         protected function validate(array $requestparams)
@@ -231,16 +236,11 @@ namespace SlimRequestParams {
                                 }
                                 break;
 
-                            case '\bitcoinaddress':
-                                $params[$k][$kk] = strtoupper($vv);
-                                $validated = 0 < (preg_match("^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$", $vv));
-                                break;
-
                             default:
                                 if (!is_string($vv)) {
                                     throw new InvalidArgumentException("Invalid parameter type value for key (use \\raw): $k", 400);
                                 }
-                                $validated = 0 < (preg_match("/^{$validations[$k]}$/", $vv));
+                                $validated = 0 < (preg_match(static::$otherformats[$validations[$k]] ?? "/^$validations[$k]$/", $vv));
                         }
                         if (!$validated) {
                             throw new InvalidArgumentException("Invalid parameter value for key: $k ($vv)", 400);
