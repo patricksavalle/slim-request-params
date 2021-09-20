@@ -106,7 +106,11 @@ General format of a validation rule:
 
     {<name>:<regex>},<optional_default_value>
 
-Missing parameters are set to the given default. 'null' or 'NULL' as default will be translated into a real null-value. 
+Missing parameters are set to the given default.  
+
+Explicitely setting a value to null:
+
+    /someurl?value1  (not: /someurl?value1=) 
 
 Extra parameters generate an error unless the wildcard parameter is used: `{*}` in which 
 case the extra parameters are passed without validation.

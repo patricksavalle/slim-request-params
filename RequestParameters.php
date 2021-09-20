@@ -144,13 +144,8 @@ namespace SlimRequestParams {
                 // check and normalize each key and value
                 foreach ($params[$k] as $kk => $vv) {
 
-                    // convert null values to real null's, no validation needed
-                    if (in_array($vv, ['NULL', 'null', null])) {
-
-                        $params[$k][$kk] = null;
-
-                    } else {
-
+                    // skip validation on real null value
+                    if ($vv !== null) {
                         switch ($validations[$k]) {
 
                             case '\boolean':
