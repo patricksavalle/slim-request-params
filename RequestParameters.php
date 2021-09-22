@@ -6,6 +6,7 @@ namespace SlimRequestParams {
 
     use DateTime;
     use DateTimeZone;
+    use HTMLPurifier;
     use InvalidArgumentException;
     use stdClass;
     use Throwable;
@@ -36,11 +37,8 @@ namespace SlimRequestParams {
 
         protected function xtext(string $text): string
         {
-            $html = tidy_parse_string($text, ['output-xhtml' => 1, 'show-body-only' => 1]);
-            if (!tidy_clean_repair($html)) {
-                throw new Exception;
-            }
-            return strip_tags(tidy_get_output($html), '<strong><abbr><em><a><b><cite><i><sub><sup><code><prev><del><blockquote>');
+            $html = (new HTMLPurifier())->purify($text);
+            return strip_tags($html, '<strong><abbr><em><a><b><cite><i><sub><sup><code><prev><del><blockquote>');
         }
 
         protected function validate(array $requestparams)
