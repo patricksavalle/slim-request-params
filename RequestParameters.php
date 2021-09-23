@@ -37,9 +37,8 @@ namespace SlimRequestParams {
 
         protected function xtext(string $text): string
         {
-            // TODO figure out Purifier config
             $config = HTMLPurifier_Config::createDefault();
-            $config->set('HTML.AllowedElements', ["strong","abbr","em","a","b","cite","i","sub","sup","code","prev","del","blockquote"]);
+            $config->set('HTML.Allowed', "strong,abbr,em,a[href],b,cite,i,sub,sup,code,del,blockquote");
             return (new HTMLPurifier($config))->purify($text);
         }
 
