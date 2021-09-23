@@ -7,10 +7,10 @@ namespace SlimRequestParams {
     use DateTime;
     use DateTimeZone;
     use HTMLPurifier;
+    use HTMLPurifier_Config;
     use InvalidArgumentException;
     use stdClass;
     use Throwable;
-    use Exception;
 
     abstract class RequestParameters extends stdClass
     {
@@ -37,8 +37,10 @@ namespace SlimRequestParams {
 
         protected function xtext(string $text): string
         {
-            $html = (new HTMLPurifier())->purify($text);
-            return strip_tags($html, '<strong><abbr><em><a><b><cite><i><sub><sup><code><prev><del><blockquote>');
+            // TODO figure out Purifier config
+            $config = HTMLPurifier_Config::createDefault();
+            $config->set('HTML.AllowedElements', ["strong","abbr","em","a","b","cite","i","sub","sup","code","prev","del","blockquote"]);
+            return (new HTMLPurifier($config))->purify($text);
         }
 
         protected function validate(array $requestparams)
