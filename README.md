@@ -72,7 +72,7 @@ To validate request parameters:
             '{*}',
         ])
 
-To validate body parameters:
+To validate body parameters (posted by client as x-www-form-urlencoded):
 
     use SlimRequestParams\BodyParameters;
 
@@ -110,14 +110,14 @@ Missing parameters are set to the given default.
 
 Explicitely setting a value to null:
 
-    /someurl?value1  (not: /someurl?value1=) 
+    /someurl?key=  (leave value empty) 
 
 Extra parameters generate an error unless the wildcard parameter is used: `{*}` in which 
 case the extra parameters are passed without validation.
 
 Accepts the RFC-standard query parameter array, not the PHP version:
 
-    /someurl?A=10&a=11&a=12
+    /someurl?a=10&a=11&a=12
 
 For typed parameters and special formats there are the following keywords that can be used instead of the regex:
 
@@ -135,6 +135,7 @@ For typed parameters and special formats there are the following keywords that c
     \currency
     \language
     \bitcoinaddress
+    \moneroaddress
     \xtext   (a XHTML fragment only using text formatting tags, tidies up the text)
     
 These are only syntax checks! Also there is an accept 'anything else' argument:
@@ -149,7 +150,7 @@ _(See code example above)_
 
 The RequestHeaders Middleware always accept 'anything else'.
 
-### 2. Install the strategy for access to the validated arguments
+### 2. Install the strategy in SLIM3.x for access to the validated arguments
 
 Add the strategy that combines the url-, query- and post-parameters and request-headers into one object.
 
