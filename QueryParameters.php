@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace SlimRequestParams {
 
@@ -15,9 +15,8 @@ namespace SlimRequestParams {
 
         public function __invoke(
             ServerRequestInterface $request,
-            ResponseInterface $response,
-            callable $next)
-        : ResponseInterface
+            ResponseInterface      $response,
+            callable               $next): ResponseInterface
         {
             $this->validate($this->parse_str($request->getUri()->getQuery()));
             return $next($request, $response);
@@ -34,7 +33,7 @@ namespace SlimRequestParams {
                 foreach ($pairs as $i) {
                     // split into name and value
                     if (strpos($i, '=')) {
-                        list($name, $value) = explode('=', $i, 2);
+                        [$name, $value] = explode('=', $i, 2);
                         $value = urldecode($value);
                     } else {
                         $name = $i;

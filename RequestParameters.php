@@ -19,13 +19,12 @@ namespace SlimRequestParams {
             "\moneroaddress" => "^4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$",
         ];
 
-        // Derived classes must implement:
-        // static $validated_parameters;
-
         protected $rules;
 
         public function __construct(array $rules = [])
         {
+            // Derived classes must implement:
+            // static $validated_parameters;
             assert(property_exists(get_called_class(), 'validated_parameters'));
             $this->rules = $rules;
         }
@@ -37,9 +36,14 @@ namespace SlimRequestParams {
 
         protected function xtext(string $text): string
         {
-            $config = HTMLPurifier_Config::createDefault();
-            $config->set('HTML.Allowed', "strong,abbr,em,a[href],b,cite,i,sub,sup,code,del,blockquote,p,br,ul,li,ol,table,tr,td");
-            return (new HTMLPurifier($config))->purify($text);
+            if (empty($text)) return $text;
+            static $purifier = null;
+            if ($purifier === null) {
+                $config = HTMLPurifier_Config::createDefault();
+                $config->set('HTML.Allowed', "strong,abbr,em,a[href],b,cite,i,sub,sup,code,del,blockquote,p,br,ul,li,ol,table,tr,td");
+                $purifier = new HTMLPurifier($config);
+            }
+            return $purifier->purify($text);
         }
 
         protected function validate(array $requestparams)
