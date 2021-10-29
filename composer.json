@@ -16,8 +16,7 @@
   ],
   "require": {
     "slim/slim": "^3.0",
-    "ext-json": "*",
-    "ezyang/htmlpurifier": "^4.13"
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {

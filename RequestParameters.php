@@ -6,8 +6,6 @@ namespace SlimRequestParams {
 
     use DateTime;
     use DateTimeZone;
-    use HTMLPurifier;
-    use HTMLPurifier_Config;
     use InvalidArgumentException;
     use stdClass;
     use Throwable;
@@ -36,14 +34,7 @@ namespace SlimRequestParams {
 
         protected function xtext(string $text): string
         {
-            if (empty($text)) return $text;
-            static $purifier = null;
-            if ($purifier === null) {
-                $config = HTMLPurifier_Config::createDefault();
-                $config->set('HTML.Allowed', "strong,abbr,em,a[href],b,cite,i,sub,sup,code,del,blockquote,p,br,ul,li,ol,table,tr,td");
-                $purifier = new HTMLPurifier($config);
-            }
-            return $purifier->purify($text);
+            return strip_tags($text);
         }
 
         protected function validate(array $requestparams)
