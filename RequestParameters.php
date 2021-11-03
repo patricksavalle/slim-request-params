@@ -182,6 +182,13 @@ namespace SlimRequestParams {
                                 $validated = false !== filter_var($vv, FILTER_VALIDATE_URL);
                                 break;
 
+                            case '\urlencoded':
+                                $params[$k][$kk] = urldecode($vv);
+                                $validated =
+                                    (1 === (preg_match("/^(?:[^%]|%[0-9A-Fa-f]{2})+$/", $vv)))
+                                    && false !== filter_var(urldecode($vv), FILTER_VALIDATE_URL);
+                                break;
+
                             case '\domain':
                                 $validated = false !== filter_var($vv, FILTER_VALIDATE_DOMAIN);
                                 break;
@@ -190,12 +197,12 @@ namespace SlimRequestParams {
                             case '\nationality':
                             case '\country':
                                 $params[$k][$kk] = strtoupper($vv);
-                                $validated = 0 < (preg_match("/^(?:[A-Za-z]{2})?$/", $vv));
+                                $validated = 1 === (preg_match("/^(?:[A-Za-z]{2})?$/", $vv));
                                 break;
 
                             case '\currency':
                                 $params[$k][$kk] = strtoupper($vv);
-                                $validated = 0 < (preg_match("/^(?:[[:alnum:]]{3})?$/", $vv));
+                                $validated = 1 === (preg_match("/^(?:[[:alnum:]]{3})?$/", $vv));
                                 break;
 
                             case '\date':
@@ -229,7 +236,7 @@ namespace SlimRequestParams {
                                 if (!is_string($vv)) {
                                     throw new InvalidArgumentException("Invalid parameter type value for key (use \\raw): $k", 400);
                                 }
-                                $validated = 0 < (preg_match(static::$otherformats[$validations[$k]] ?? "/^$validations[$k]$/", $vv));
+                                $validated = 1 === (preg_match(static::$otherformats[$validations[$k]] ?? "/^$validations[$k]$/", $vv));
                         }
                         if (!$validated) {
                             throw new InvalidArgumentException("Invalid parameter value for key: $k ($vv)", 400);
