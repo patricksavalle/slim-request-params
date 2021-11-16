@@ -40,8 +40,8 @@ namespace SlimRequestParams {
         protected function validate(array $requestparams)
         {
             $params = [];
-            $arrays = [];
             $validations = [];
+            $arrays = [];
             $allow_any = false;
 
             if (empty($requestparams)) {
@@ -65,7 +65,7 @@ namespace SlimRequestParams {
                     throw new InvalidArgumentException("Invalid validation pattern: " . $rule, 500);
                 }
                 $validations[$matches['name']] = $matches['pattern'];
-                if (!empty($matches['array'])) $arrays[] = $matches['name'];
+                $arrays[$matches['name']] = !empty($matches['array']);
 
                 // set the defaults
                 if (!array_key_exists($matches['name'], $requestparams)) {
@@ -246,15 +246,15 @@ namespace SlimRequestParams {
                     }
                 }
 
-                // convert single element value back to scalar if needed
-                if (!in_array($k, $arrays) and count($params[$k]) === 1) {
+                // convert single element value back to scalar
+                if (1 == count($params[$k]) and empty($arrays[$k])) {
                     // get the first (only) element of the array
                     $params[$k] = reset($params[$k]);
                 }
-                // must be supplied by sub-class
-                static::$validated_parameters = $params;
             }
-
+            // must be supplied by sub-class
+            static::$validated_parameters = $params;
         }
+
     }
 }
