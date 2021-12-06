@@ -13,7 +13,7 @@ namespace SlimRequestParams {
     abstract class RequestParameters extends stdClass
     {
         static $otherformats = [
-            "\bitcoinaddress" => "/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/",
+            "\bitcoinaddress" => "/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/",
             "\moneroaddress" => "/^4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$/",
         ];
 
