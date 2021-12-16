@@ -186,9 +186,7 @@ namespace SlimRequestParams {
 
                             case '\urlencoded':
                                 $params[$k][$kk] = urldecode($vv);
-                                $validated =
-                                    (1 === (preg_match("/^(?:[^%]|%[0-9A-Fa-f]{2})+$/", $vv)))
-                                    && false !== filter_var(urldecode($vv), FILTER_VALIDATE_URL);
+                                $validated = (1 === (preg_match("/^(?:[^%]|%[0-9A-Fa-f]{2})+$/", $vv)));
                                 break;
 
                             case '\domain':
