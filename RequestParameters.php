@@ -186,7 +186,7 @@ namespace SlimRequestParams {
 
                             case '\urlencoded':
                                 $params[$k][$kk] = urldecode($vv);
-                                $validated = (1 === (preg_match("/^(?:[^%]|%[0-9A-Fa-f]{2})+$/", $vv)));
+                                $validated = (1 === (preg_match("/^(?:[^%]|%[\dA-Fa-f]{2})+$/", $vv)));
                                 break;
 
                             case '\domain':
@@ -239,7 +239,7 @@ namespace SlimRequestParams {
                                 $validated = 1 === (preg_match(static::$otherformats[$validations[$k]] ?? "/^$validations[$k]$/", $vv));
                         }
                         if (!$validated) {
-                            throw new InvalidArgumentException("Invalid parameter value for key: $k ($vv)", 400);
+                            throw new InvalidArgumentException("Invalid parameter value for key: $k", 400);
                         }
                     }
                 }
