@@ -11,7 +11,7 @@ namespace SlimRequestParams {
 
     class BodyParameters extends RequestParameters
     {
-        static protected $validated_parameters;
+        static protected array $validated_parameters;
 
         public function __invoke(
             ServerRequestInterface $request,

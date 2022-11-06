@@ -12,12 +12,12 @@ namespace SlimRequestParams {
 
     abstract class RequestParameters extends stdClass
     {
-        static $otherformats = [
+        static array $otherformats = [
             "\bitcoinaddress" => "/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/",
             "\moneroaddress" => "/^4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$/",
         ];
 
-        protected $rules;
+        protected array $rules;
 
         public function __construct(array $rules = [])
         {
@@ -90,28 +90,13 @@ namespace SlimRequestParams {
                     } elseif (strcasecmp($matches['default'], '\optional') != 0) {
 
                         // type corrections to the defaults
-                        switch ($matches['pattern']) {
-                            case '\boolean':
-                                $params[$matches['name']] = (bool)$matches['default'];
-                                break;
-
-                            case '\int':
-                                $params[$matches['name']] = (int)$matches['default'];
-                                break;
-
-                            case '\float':
-                                $params[$matches['name']] = (float)$matches['default'];
-                                break;
-
-                            case '\date':
-                                /** @noinspection PhpUnhandledExceptionInspection */
-                                $params[$matches['name']] = (new DateTime($matches['default']))->format('Y-m-d H:i:s');
-                                break;
-
-                            default:
-                                $params[$matches['name']] = $matches['default'];
-                                break;
-                        }
+                        $params[$matches['name']] = match ($matches['pattern']) {
+                            '\boolean' => (bool)$matches['default'],
+                            '\int' => (int)$matches['default'],
+                            '\float' => (float)$matches['default'],
+                            '\date' => (new DateTime($matches['default']))->format('Y-m-d H:i:s'),
+                            default => $matches['default'],
+                        };
                     }
                 }
             }
@@ -209,7 +194,7 @@ namespace SlimRequestParams {
                                 try {
                                     $params[$k][$kk] = (new DateTime($vv))->format('Y-m-d H:i:s');
                                     $validated = true;
-                                } catch (Throwable $t) {
+                                } catch (Throwable) {
                                     $validated = false;
                                 }
                                 break;
@@ -218,7 +203,7 @@ namespace SlimRequestParams {
                                 try {
                                     $params[$k][$kk] = $this->xtext($vv);
                                     $validated = true;
-                                } catch (Throwable $t) {
+                                } catch (Throwable) {
                                     $validated = false;
                                 }
                                 break;
@@ -227,7 +212,7 @@ namespace SlimRequestParams {
                                 try {
                                     $params[$k][$kk] = (new DateTimeZone($vv))->getName();
                                     $validated = true;
-                                } catch (Throwable $t) {
+                                } catch (Throwable) {
                                     $validated = false;
                                 }
                                 break;
@@ -250,7 +235,7 @@ namespace SlimRequestParams {
                     $params[$k] = reset($params[$k]);
                 }
             }
-            // must be supplied by sub-class
+            // must be supplied by subclass
             static::$validated_parameters = $params;
         }
 
