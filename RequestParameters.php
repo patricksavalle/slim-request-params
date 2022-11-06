@@ -103,6 +103,9 @@ namespace SlimRequestParams {
             // loop parameters and validate according to rules
             foreach ($requestparams as $k => $v) {
 
+                // make sure all body, query, header, segment names are unique
+                assert(!isset(self::$validated_parameters[$k]));
+
                 // handle unvalidatable keys
                 if (!isset($validations[$k])) {
                     if (!$allow_any) {
