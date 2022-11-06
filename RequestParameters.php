@@ -12,6 +12,8 @@ namespace SlimRequestParams {
 
     abstract class RequestParameters extends stdClass
     {
+        static protected array $validated_parameters = [];
+
         static array $otherformats = [
             "\bitcoinaddress" => "/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/",
             "\moneroaddress" => "/^4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$/",
@@ -21,9 +23,6 @@ namespace SlimRequestParams {
 
         public function __construct(array $rules = [])
         {
-            // Derived classes must implement:
-            // static $validated_parameters;
-            assert(property_exists(get_called_class(), 'validated_parameters'));
             $this->rules = $rules;
         }
 
@@ -79,11 +78,11 @@ namespace SlimRequestParams {
 
                         $params[$matches['name']] = null;
 
-                    } elseif ($matches['pattern'] == '\boolean' and in_array($matches['default'], ['true', 'TRUE', 1])) {
+                    } elseif ($matches['pattern'] === '\boolean' and in_array($matches['default'], ['true', 'TRUE', 1])) {
 
                         $params[$matches['name']] = true;
 
-                    } elseif ($matches['pattern'] == '\boolean' and in_array($matches['default'], ['false', 'FALSE', 0])) {
+                    } elseif ($matches['pattern'] === '\boolean' and in_array($matches['default'], ['false', 'FALSE', 0])) {
 
                         $params[$matches['name']] = false;
 
@@ -230,13 +229,12 @@ namespace SlimRequestParams {
                 }
 
                 // convert single element value back to scalar
-                if (1 == count($params[$k]) and empty($arrays[$k])) {
+                if (1 === count($params[$k]) and empty($arrays[$k])) {
                     // get the first (only) element of the array
                     $params[$k] = reset($params[$k]);
                 }
             }
-            // must be supplied by subclass
-            static::$validated_parameters = $params;
+            self::$validated_parameters = array_merge(self::$validated_parameters, $params);
         }
 
     }

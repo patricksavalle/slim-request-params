@@ -21,17 +21,7 @@ namespace SlimRequestParams {
         : ResponseInterface
         {
             // merge validated query parameters into object
-            foreach (QueryParameters::get() as $k => $v) {
-                assert(!isset($routeArguments[$k]));
-                $routeArguments[$k] = $v;
-            }
-            // merge validated body parameters into object
-            foreach (BodyParameters::get() as $k => $v) {
-                assert(!isset($routeArguments[$k]));
-                $routeArguments[$k] = $v;
-            }
-            // merge validated body parameters into object
-            foreach (RequestHeaders::get() as $k => $v) {
+            foreach (RequestParameters::get() as $k => $v) {
                 assert(!isset($routeArguments[$k]));
                 $routeArguments[$k] = $v;
             }

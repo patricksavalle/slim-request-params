@@ -11,8 +11,6 @@ namespace SlimRequestParams {
 
     class RequestHeaders extends RequestParameters
     {
-        static protected array $validated_parameters;
-
         public function __construct(array $rules = [])
         {
             parent::__construct($rules);
