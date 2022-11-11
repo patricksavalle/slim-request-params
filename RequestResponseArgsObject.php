@@ -4,9 +4,6 @@ declare(strict_types = 1);
 
 namespace SlimRequestParams {
 
-    require_once 'BodyParameters.php';
-    require_once 'QueryParameters.php';
-
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Slim\Interfaces\InvocationStrategyInterface;
